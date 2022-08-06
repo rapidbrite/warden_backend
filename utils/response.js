@@ -8,7 +8,7 @@ const response = (statusCode,message,data,res) =>{
         })
     }
     else if(statusCode===400){
-        return res.json({
+        return res.json({gi
             status:"Failed",
             statusCode : 400,
             message,
