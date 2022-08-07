@@ -14,4 +14,3 @@ const controller = {
 
 module.exports = controller;
 
-// okay

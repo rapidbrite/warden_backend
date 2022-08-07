@@ -1,8 +1,17 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
+
 
 const projectSchema = new mongoose.Schema({
-    id : {
+    projectId : {
         type : String,
+        required : true
+    },
+    projectIcon : {
+        type : String,
+    },
+    projectKey : {
+        type : String,  
         required : true
     },
     name : {
@@ -12,8 +21,12 @@ const projectSchema = new mongoose.Schema({
     description : {
         type : String
     },
-    owner : {
+    category : {
         type : String,
+    },
+    owner : {
+        type: Schema.Types.ObjectId,
+        ref : 'user',
         required : true
     },
     admin : [{
