@@ -1,16 +1,34 @@
 const express = require("express")
 const cors = require("cors");
 const con = require("./connection");
-const response = require("./utils/response");
 const route = require("./routes")
 var cookies = require("cookie-parser");
+const passport = require("passport");
+const passportSetup = require("./passport");
+
+const cookieSession = require("cookie-session");
+var session = require('express-session');
+
+
 
 require('dotenv').config();
 
 
 const app = express();
+app.use(session({ secret: 'SECRET' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
-app.use(cors({ credentials: true }));
+
+app.use(
+  cors({
+    origin: "https://qkblch-3000.preview.csb.app",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+
 app.use(cookies());
 con();
 

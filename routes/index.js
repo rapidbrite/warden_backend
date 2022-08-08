@@ -1,11 +1,10 @@
-const express = require("express");
+const express = require("express")
 const route = express.Router();
-
-const logoutController = require("../controller/logout");
+const logout = require("../controller/logout");
 
 
 route.use("/auth",require("./auth"))
-route.get("/logout",logoutController.logout);
+route.get("/logout",logout.logout);
 route.use("/project",require("./project"))
 
 
