@@ -4,9 +4,18 @@ const userModel = require("../../model/userSchema");
 // response
 const response = require("../../utils/response");
 
+const makeResponseData = (data) => {
+    const responseData = {};
+    responseData.projectId = data.projectId;
+    responseData.projectIcon = data.projectIcon;
+    responseData.name = data.name;
+
+    return responseData;
+}
+
 const allProjects = async (req,res) =>{
     try{
-       const {userName} = req.body;
+        const { userName } = req.body;
        if(!userName){
            return response(400,"User Not Found",null,res);
        }
@@ -19,8 +28,8 @@ const allProjects = async (req,res) =>{
         let projectIDs = user.projects.map(project => project.toString());
         let projectids = await projectModel.find({
             _id : {$in : projectIDs} 
-        }).select("projectId");
-        projectids = projectids.map(project => project.projectId);
+        }).select("projectId projectIcon name"); 
+        projectids = projectids.map(project => makeResponseData(project));
         
         return response(200,"Projects found successfully",projectids,res);
     }

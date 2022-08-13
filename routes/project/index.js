@@ -6,10 +6,10 @@ const requireAuth = require("../../middleware/auth/verify");
 
 
 
-route.post("/get",requireAuth,projectControllers.getProject);
+route.post("/get",projectControllers.getProject);
 route.post("/all",requireAuth,projectControllers.getAllProject);
 route.post("/create",requireAuth,projectControllers.createProject);
 route.post("/delete",requireAuth,projectControllers.deleteProject);
-route.post("/invite",requireAuth,projectControllers.inviteUserToProject);
+route.post("/invite",projectControllers.inviteUserToProject);
 
 module.exports = route;

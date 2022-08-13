@@ -28,10 +28,11 @@
     "express-session": "^1.17.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.1",
+    "mongoose-fuzzy-searching": "^2.0.2",
     "nodemon": "^2.0.19",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",
+    "socket.io": "^4.5.1",
     "uuid": "^8.3.2"
-  },
-  "devDependencies": {}
+  }
 }

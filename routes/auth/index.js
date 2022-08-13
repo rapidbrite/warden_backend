@@ -6,18 +6,9 @@ const authController = require("../../controller/auth")
 // const passport = require("passport");
 const GitHubStrategy = require('passport-github2').Strategy
 
-const CLI_URL = "https://qkblch-3000.preview.csb.app/dashboard"
+const CLI_URL = "http://localhost:3000/auth"
 
-// route.get("/login/success", (req, res) => {
-//   if (req.user) {
-//     res.status(200).json({
-//       success: true,
-//       message: "successfull",
-//       user: req.user,
-//       //   cookies: req.cookies
-//     });
-//   }
-// });
+
 route.get("/login/success",authController.githubAuth);
 
 route.get("/login/failed", (req, res) => {
@@ -43,16 +34,6 @@ route.get(
     failureRedirect: "/login/failed",
   })
 );
-
-// route.get("/github/success",authController.githubAuth)
-
-// route.get('/github',
-// passport.authenticate('github', { scope: [ 'user:email' ] }));
-
-
-// route.get('/github/callback', 
-// passport.authenticate('github', { failureRedirect: '/login/failed',successRedirect : CLI_URL }));
-
 
 
 module.exports = route;

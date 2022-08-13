@@ -1,6 +1,13 @@
 const projectModel = require("../../model/projectSchema");
 const response = require("../../utils/response");
 
+const filterData = (user) => {
+    const filterData = {};
+    filterData.userName = user.userName;
+    filterData.avatar = user.avatar;
+    return filterData;
+}
+
 const getProject = async (req,res) =>{
     try{
         const {projectId} = req.body;
@@ -8,12 +15,24 @@ const getProject = async (req,res) =>{
             return response(400,"Project Id is required!",null,res);
         }
         const project = await projectModel.findOne({
-            projectId : projectId
-        }).select("projectId projectIcon projectKey name description category");
+            projectId: projectId
+        }).populate("owner").populate("admin").populate("users");
+        
         if(!project){
             return response(400,"Project Not Found",null,res);
         }
-        return response(200,"Project found successfully",project,res);
+
+        const returnObj = {};
+        returnObj.name = project.name;
+        returnObj.projectId = project.projectId;
+        returnObj.projectIcon = project.projectIcon;
+        returnObj.owner = filterData(project.owner);
+        returnObj.admins = project.admin.map(admin => filterData(admin));
+        returnObj.users = project.users.map(user => filterData(user));
+
+        
+
+        return response(200,"Project found successfully",returnObj,res);
     }
     catch(err){
         return response(400,err.message,null,res);
