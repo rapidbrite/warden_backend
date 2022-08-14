@@ -1,4 +1,5 @@
 const projectModel = require("../../model/projectSchema");
+const isUserPartOfProject = require("../../utils/isUserPartOfProject");
 const response = require("../../utils/response");
 
 const filterData = (user) => {
@@ -10,7 +11,7 @@ const filterData = (user) => {
 
 const getProject = async (req,res) =>{
     try{
-        const {projectId} = req.body;
+        const {projectId,userName} = req.body;
         if(!projectId){
             return response(400,"Project Id is required!",null,res);
         }
@@ -20,6 +21,11 @@ const getProject = async (req,res) =>{
         
         if(!project){
             return response(400,"Project Not Found",null,res);
+        }
+
+        const part = await isUserPartOfProject(userName,projectId);
+        if(!part){
+            return response(400,"User is not part of the project",null,res);
         }
 
         const returnObj = {};

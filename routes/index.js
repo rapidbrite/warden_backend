@@ -8,7 +8,8 @@ route.get("/logout",logout.logout);
 route.use("/project", require("./project"))
 route.use("/user", require("./user"))
 route.use('/search',require("./search"))
-route.use("/notification",require("./notification"))
+route.use("/notification", require("./notification"))
+route.use("/chat",require("./chat"))
 
 
 

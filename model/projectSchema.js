@@ -41,6 +41,10 @@ const projectSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref : 'invitation'
     }],
+    messages : [{
+        type: Schema.Types.ObjectId,
+        ref : 'message'
+    }],
 })
 
 const Project = mongoose.model("project",projectSchema);

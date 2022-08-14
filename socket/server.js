@@ -1,7 +1,8 @@
 const {
     setSocketServerInstance,
     getSocketServerInstance,
-    addConnectedUsers
+    addConnectedUsers,
+    addConnectedUsersInSingleProject
 } = require('./store');
 
 const registerSocketServer = (server) => {
@@ -21,6 +22,9 @@ const registerSocketServer = (server) => {
 
         socket.on("addConnectedUser", (userName) => {
             addConnectedUsers(userName, socket.id);
+        })
+        socket.on("addConnectedUsersInSingleProject", (data) => {
+            addConnectedUsersInSingleProject(data.userName, data.projectId, socket.id);
         })
     }); 
 };
