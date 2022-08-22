@@ -24,6 +24,10 @@ const projectSchema = new mongoose.Schema({
     category : {
         type : String,
     },
+    currentChannelKey : {
+        type : String,
+        default : '',
+    },
     owner : {
         type: Schema.Types.ObjectId,
         ref : 'user',
@@ -44,6 +48,10 @@ const projectSchema = new mongoose.Schema({
     messages : [{
         type: Schema.Types.ObjectId,
         ref : 'message'
+    }],
+    channels : [{
+        type: Schema.Types.ObjectId,
+        ref : 'channel'
     }],
 })
 

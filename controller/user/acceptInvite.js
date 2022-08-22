@@ -35,7 +35,7 @@ const acceptInvite = async (req, res) => {
       
       invitation.status = "accepted";
 
-      console.log("users",project.users);
+      //console.log("users",project.users);
       
       const projectUsers = [...project.users, user._id];
       project.users = projectUsers;
