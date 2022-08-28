@@ -8,6 +8,8 @@ route.post("/create" , channelController.createChannel);
 // route.post("/get")
 route.post("/getAll", channelController.getAllChannel);
 route.post("/get", channelController.getChannel);
+route.post("/update", channelController.updateChannel);
+route.post("/delete", channelController.deleteChannel);
 // route.post("/update")
 // route.post("/delete")
 

@@ -18,10 +18,10 @@ const getChannel = async (req,res) =>{
         }
         
 
-        // const part = await isUserPartOfChannel(userName,channelId);
-        // if(!part){
-        //     return response(400,"User is not part of the channel",null,res);
-        // }
+        const part = await isUserPartOfChannel(userName,channelId);
+        if(!part){
+            return response(400,"User is not part of the channel",null,res);
+        }
 
         let returnObj = {};
         returnObj.channelId = channel.channelId;
