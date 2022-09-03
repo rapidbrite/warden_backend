@@ -11,7 +11,7 @@ const TaskSchema = new mongoose.Schema({
     },
     taskKey : {
         type: String,
-       // required: true,
+        // required: true,
     },
     taskName : {
         type : String,
@@ -20,9 +20,10 @@ const TaskSchema = new mongoose.Schema({
     taskDescription : {
         type : String,
     },
-    taskType : {
+    taskType : [{
+
         type : String,
-    },
+    }],
     taskStatus : {
         type : String,
         
@@ -43,6 +44,9 @@ const TaskSchema = new mongoose.Schema({
         default: Date.now
     },
     taskUpdatedDate : {
+        type : Date,
+    },
+    taskStartDate : {
         type : Date,
     },
     taskDueDate : {

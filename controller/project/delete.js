@@ -1,64 +1,79 @@
-const projectModel = require("../../model/projectSchema");
+const channelModel = require("../../model/channelSchema");
 const userModel = require("../../model/userSchema");
+const projectModel = require("../../model/projectSchema");
+const taskStatusModel = require("../../model/taskStatusSchema");
+const taskModel = require("../../model/taskSchema");
 
 const response = require("../../utils/response");
-const deleteProject = async (req,res) =>{
-    try{
-        const {projectId,userName} = req.body;
-        const project = await projectModel.findOne({
-            projectId : projectId
-        }).populate("owner")
-        if(!project){
-            return response(400,"Project not found!",null,res);
-        }
-        // owner
-        const owner = await userModel.findOne({
-            userName : userName
-        })
-        if(project.owner.userName !== userName){
-            return response(400,"You are not authorized to delete this project!",null,res);
-        } 
-        const index = owner.projects.indexOf(project._id);
-        if(index > -1){
-            owner.projects.splice(index,1);
-        }
-        await owner.save();
-        
-        // for admin
-        let admins = project.admin.map(admin => admin.toString());
-        admins = admins.slice(1);
-        admins.forEach(async admin =>{ 
-            const adminUser = await userModel.findOne({
-                _id : admin
-            })
-            const index = adminUser.projects.indexOf(project._id);
-            if(index > -1){
-                adminUser.projects.splice(index,1);
-            }
-            await adminUser.save();
-        })
-        
-        // for users
-        const usrs = project.users.map(usr => usr.toString());
-        usrs.forEach(async usr =>{
-            const usrUser = await userModel.findOne({
-                _id : usr
-            })
-            const index = usrUser.projects.indexOf(project._id);
-            if(index > -1){
-                usrUser.projects.splice(index,1);
-            }
-            await usrUser.save();
-        })
-        
-        
-        
-        project.remove();
-        return response(200,"Project deleted successfully",null,res);
+const deleteProject = async (req, res) => {
+  try {
+    const { projectId, userName } = req.body;
+    const project = await projectModel
+      .findOne({
+        projectId: projectId,
+      })
+      .populate("owner");
+    if (!project) {
+      return response(400, "Project not found!", null, res);
     }
-    catch(err){
-        return response(400,err.message,null,res);
+    // owner
+    const owner = await userModel.findOne({
+      userName: userName,
+    });
+    if (project.owner.userName !== userName) {
+      return response(
+        400,
+        "Only Project creator is allowed to delete the project",
+        null,
+        res
+      );
     }
-}
+
+    // from all admin object(admin.projects) remove this project
+
+    const admin = project.admin;
+    for (let i = 0; i < admin.length; i++) {
+      const user = await userModel.findById(admin[i]);
+      const index = user.projects.indexOf(project._id);
+      if (index > -1) {
+        user.projects.splice(index, 1);
+      }
+      await user.save();
+    }
+
+    // from all users object(user.projects) remove this project
+    const users = project.users;
+    for (let i = 0; i < users.length; i++) {
+      const user = await userModel.findById(users[i]);
+      const index = user.projects.indexOf(project._id);
+      if (index > -1) {
+        user.projects.splice(index, 1);
+      }
+      await user.save();
+    }
+
+    // delete all channels and tasks
+    const channels = project.channels;
+    for (let i = 0; i < channels.length; i++) {
+      const channel = await channelModel.findById(channels[i]);
+      channel.taskStatus.map(async (one) => {
+        const taskStatus = await taskStatusModel.findOne({ _id: one });
+        taskStatus.taskArray.map(async (task) => {
+          const taskToDelete = await taskModel.findOne({ _id: task });
+          await taskToDelete.remove();
+        });
+
+        await taskStatus.remove();
+      });
+
+      await channel.remove();
+    }
+
+    project.remove();
+    return response(200, "Project deleted successfully", null, res);
+  } catch (err) {
+    return response(400, err.message, null, res);
+  }
+};
 
 module.exports = deleteProject;

@@ -21,14 +21,18 @@ const sendMessage = async (req, res) => {
         if (!project) {
             return response(400, "Project not found",null,res);
         }
-
+        const date = new Date();
+        const ISTOffset = 330;   // IST offset UTC +5:30
+        const dateIST = new Date(date.getTime() + (ISTOffset) * 60000);
+        //console.log(dateIST);
         const message = new messageModel({
             text,
             sender: user._id,
             senderUserName: user.userName,
             senderAvatar: user.avatar,
+            createdAt: dateIST,
         });
-        
+        //console.log(message);
         const part = await isUserPartOfProject(userName, projectId);
         if (!part) {
             return response(400, "User is not part of the project",null,res);

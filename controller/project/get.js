@@ -31,13 +31,15 @@ const getProject = async (req,res) =>{
         const returnObj = {};
         returnObj.name = project.name;
         returnObj.projectId = project.projectId;
+        returnObj.description = project.description;
+        returnObj.category = project.category;
         returnObj.projectIcon = project.projectIcon;
         returnObj.owner = filterData(project.owner);
         returnObj.admins = project.admin.map(admin => filterData(admin));
         returnObj.users = project.users.map(user => filterData(user));
 
-        
 
+        
         return response(200,"Project found successfully",returnObj,res);
     }
     catch(err){

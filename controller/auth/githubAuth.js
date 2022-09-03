@@ -18,7 +18,7 @@ const makeReturnObj = (user,token) => {
 
 const githubAuth = async (req,res) =>{
     try{
-        // console.log("hit..",req.user);
+        //console.log("hit..",req.user);
         if(req.user){
             const body = req.user._json;
             const user = await userModel.findOne({
