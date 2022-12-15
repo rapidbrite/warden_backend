@@ -1,4 +1,4 @@
-const getUserData = require('./getUser');
+const getUserData = require('./getuser');
 const acceptInvite = require("./acceptInvite");
 
 const controllers = {
