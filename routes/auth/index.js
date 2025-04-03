@@ -27,24 +27,38 @@ route.get('/github',
   passport.authenticate('github', { session: true })
 );
 
-route.get('/github/callback',
-  passport.authenticate('github', { 
-    failureRedirect: `${process.env.FRONTEND}/login`,
-    session: true
-  }),
-  (req, res) => {
-    // User is authenticated at this point
-    if (!req.user) {
+router.get('/github/callback', (req, res, next) => {
+  passport.authenticate('github', { failureRedirect: `${process.env.FRONTEND}/login` }, (err, user, info) => {
+    // Error handling
+    if (err) {
+      console.error('GitHub auth error:', err);
+      return res.redirect(`${process.env.FRONTEND}/login?error=server_error`);
+    }
+    
+    // No user found
+    if (!user) {
+      console.error('GitHub auth: No user returned');
       return res.redirect(`${process.env.FRONTEND}/login?error=authentication_failed`);
     }
     
-    // Generate token directly here
-    const token = require("../middleware/auth/create")(req.user._json.login);
+    // Log successful authentication
+    console.log('GitHub auth successful for:', user.username);
     
-    // This approach sends the token directly to the frontend in the URL
-    // The frontend can extract it and save to localStorage
-    res.redirect(`${process.env.FRONTEND}/auth?token=${token}`);
-  }
-);
+    // Set user in session
+    req.login(user, (err) => {
+      if (err) {
+        console.error('Session login error:', err);
+        return res.redirect(`${process.env.FRONTEND}/login?error=session_error`);
+      }
+      
+      // Generate token
+      const createJWT = require('../../middleware/auth/create');
+      const token = createJWT(user._json.login);
+      
+      // Redirect with token
+      return res.redirect(`${process.env.FRONTEND}/auth?token=${token}`);
+    });
+  })(req, res, next);
+});
 
 module.exports = route;
