@@ -23,15 +23,22 @@ app.use(passport.session());
 app.use(express.json());
 
 
-
-
 app.use(
   cors({
-    origin: process.env.CLIENT_URL?.split(",") || "http://localhost:3002",
+    origin: "*", // Allows any domain
     methods: "GET,POST,PUT,DELETE",
-    credentials: true,
+    credentials: false, // Set to true only if sending cookies or authorization headers
   })
 );
+
+
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_URL?.split(",") || "http://localhost:3002",
+//     methods: "GET,POST,PUT,DELETE",
+//     credentials: true,
+//   })
+// );
 
 
 app.use(cookies());

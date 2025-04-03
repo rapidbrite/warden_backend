@@ -16,6 +16,7 @@ const makeResponseData = (data) => {
 const allProjects = async (req,res) =>{
     try{
         const { userName } = req.body;
+        console.log(userName);
        if(!userName){
            return response(400,"User Not Found",null,res);
        }
