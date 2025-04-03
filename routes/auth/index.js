@@ -27,7 +27,7 @@ route.get('/github',
   passport.authenticate('github', { session: true })
 );
 
-router.get('/github/callback', (req, res, next) => {
+route.get('/github/callback', (req, res, next) => {
   passport.authenticate('github', { failureRedirect: `${process.env.FRONTEND}/login` }, (err, user, info) => {
     // Error handling
     if (err) {
