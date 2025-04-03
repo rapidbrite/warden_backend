@@ -16,9 +16,22 @@ const socketServer = require("./socket/server.js");
 
 console.log(process.env);
 const app = express();
-app.use(session({ secret: "SECRET" }));
+// In server.js
+// Session must be before passport
+app.use(session({
+  secret: process.env.SESSION_SECRET || "SECRET",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 604800000 // 7 days
+  }
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Then configure CORS, then routes
 
 app.use(express.json());
 
