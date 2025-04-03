@@ -23,14 +23,22 @@ route.get("/logout", (req, res) => {
   });
 });
 
-route.get("/github", passport.authenticate("github", { scope: ["profile"] }));
+route.get('/github',
+  passport.authenticate('github', { session: true })
+);
 
-route.get(
-  "/github/callback",
-  passport.authenticate("github", {
-    successRedirect: CLI_URL,
-    failureRedirect: "/login/failed",
-  })
+route.get('/github/callback',
+  passport.authenticate('github', { 
+    failureRedirect: `${process.env.FRONTEND}/login`, 
+    session: true 
+  }),
+  (req, res) => {
+    // Debug logging
+    console.log("Auth callback, user:", req.user?.username);
+    
+    // Redirect to frontend with success
+    res.redirect(`${process.env.FRONTEND}/auth`);
+  }
 );
 
 module.exports = route;

@@ -1,6 +1,11 @@
 const GithubStrategy = require("passport-github2").Strategy;
 const passport = require("passport");
-
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
 passport.use(
   new GithubStrategy(
     {
@@ -9,13 +14,9 @@ passport.use(
       callbackURL: `${process.env.BACKEND}/auth/github/callback`,
     },
     function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+      console.log("GitHub auth attempt, profile:", profile.username);
+      return done(null, profile);
     }
   )
 );
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function (user, done) {
-  done(null, user);
-});
+
