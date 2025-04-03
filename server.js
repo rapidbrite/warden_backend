@@ -20,12 +20,12 @@ const app = express();
 // Session must be before passport
 app.use(session({
   secret: process.env.SESSION_SECRET || "SECRET",
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'none',
-    
+
     maxAge: 604800000 // 7 days
   }
 }));
@@ -50,16 +50,11 @@ app.use(express.json());
 app.use(
   cors({
     origin: function(origin, callback) {
-      // Define allowed origins - add your production URL
       const allowedOrigins = [
         "https://warden-darshan.netlify.app", 
         "http://localhost:3000",
         "http://localhost:3002"
-        
       ];
-      
-      // Alternatively, use environment variables for more flexibility
-     // const allowedOrigins = (process.env.CLIENT_URL?.split(",") || ["https://warden-darshan.netlify.app", "http://localhost:3000","http://localhost:3002"])
       
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);

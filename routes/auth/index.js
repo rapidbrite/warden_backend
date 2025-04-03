@@ -29,15 +29,21 @@ route.get('/github',
 
 route.get('/github/callback',
   passport.authenticate('github', { 
-    failureRedirect: `${process.env.FRONTEND}/login`, 
-    session: true 
+    failureRedirect: `${process.env.FRONTEND}/login`,
+    session: true
   }),
   (req, res) => {
-    // Debug logging
-    console.log("Auth callback, user:", req.user?.username);
+    // User is authenticated at this point
+    if (!req.user) {
+      return res.redirect(`${process.env.FRONTEND}/login?error=authentication_failed`);
+    }
     
-    // Redirect to frontend with success
-    res.redirect(`${process.env.FRONTEND}/auth`);
+    // Generate token directly here
+    const token = require("../middleware/auth/create")(req.user._json.login);
+    
+    // This approach sends the token directly to the frontend in the URL
+    // The frontend can extract it and save to localStorage
+    res.redirect(`${process.env.FRONTEND}/auth?token=${token}`);
   }
 );
 
